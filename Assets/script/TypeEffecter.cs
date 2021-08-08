@@ -11,7 +11,7 @@ public class TypeEffecter : MonoBehaviour
     public GameObject endCursur;
     int index;
     float interval;
-    bool isAnim;
+    public bool isAnim;
     private void Awake(){
         msgText = GetComponent<Text>();// 초기화
     }
@@ -19,8 +19,16 @@ public class TypeEffecter : MonoBehaviour
     //들어온 메세지 설정 함수
     public void SetMsg(string msg)
     {
-        targetMsg = msg;
-        EffectStart();
+        if (isAnim)
+        {
+            msgText.text = targetMsg;
+            CancelInvoke();
+            EffectEnd();
+        }
+        else {
+            targetMsg = msg;
+            EffectStart();
+        }
     }
 
 
@@ -31,7 +39,9 @@ public class TypeEffecter : MonoBehaviour
         endCursur.SetActive(false);//endcursur 안보이게
         interval = 1.0f / CharperSeconds;  //속도 설정
         Invoke("Effecting",interval); //1글자가 나오는데 걸리는 딜레이 설정하는 함수(public)
-        
+        isAnim = true;
+
+
     }
 //애니메이션 실행
     void Effecting(){
@@ -47,6 +57,7 @@ public class TypeEffecter : MonoBehaviour
     }
 //마무리! EndCursur 보이도록 설정하기
     void EffectEnd(){
+        isAnim = false;
         endCursur.SetActive(true);
     }
 }

@@ -9,16 +9,18 @@ public class GameManager : MonoBehaviour
     public Animator talkBox;
     public TypeEffecter talk;
     public GameObject scanOject;
+    public GameObject menuset;      //일시정지 후 메인 메뉴창
     public Animator portraitAnim;
     public Sprite prePortraint;     //과거의 초상화 이미지 저장 
     public Image portraitImg;       //초상화 이미지 컨트롤
     public bool isAction;
     public int talkIndex;
+    public Text questText;
 
 
     public void Start()
     {
-        Debug.Log(questManager.CheckQuest());
+        questText.text = questManager.CheckQuest();
     }
 
 
@@ -36,23 +38,42 @@ public class GameManager : MonoBehaviour
         }
 
 
-
+    void Update()
+    {
+        if (Input.GetButton("Cancel")) {
+            if (menuset.activeSelf)//esc눌렀을 때 메뉴창이 켜져있다면 비활성화하겠다.
+            {
+                menuset.SetActive(false);
+            }
+            else
+            menuset.SetActive(true);
+        }    
+    }
 
 
     //(각 Npc맞는 데이터를 가져옴)
     void Talk(int id, bool isNpc){
-        //퀘스트 관련, 지금 말하고 있는 npc id값을 넘겨줌
-        int questTalkIndex = questManager.GetQuestTalkIndex(id);
+        int questTalkIndex;
+        string talkData = "";
+        if (talk.isAnim)
+        {
+            talk.SetMsg("");
+            return;
+        }
+        else {
+            //퀘스트 관련, 지금 말하고 있는 npc id값을 넘겨줌
+            questTalkIndex = questManager.GetQuestTalkIndex(id);
 
-        //GetTalk사용자가 만든 함수, id에 맞는 데이터를 return 한다.
-        string talkData = talkMenager.GetTalk(id+ questTalkIndex, talkIndex);
+            //GetTalk사용자가 만든 함수, id에 맞는 데이터를 return 한다.
+            talkData = talkMenager.GetTalk(id + questTalkIndex, talkIndex);
+        }
 
         //이야기가 끝났을 때 이야기box를 비활성화 해준다.
         if(talkData == null){
             isAction = false;
             //npc와 이야기가 끝났을 때 talkIndex를 초기화해줌
-            talkIndex = 0; 
-            Debug.Log(questManager.CheckQuest(id));
+            talkIndex = 0;
+            questText.text = questManager.CheckQuest(id);
             return;
         }
 
@@ -81,6 +102,15 @@ public class GameManager : MonoBehaviour
         isAction = true;//대화상자게 계속 보이게 true
         talkIndex++;
     }
+
+
+
+    //게임 종료하기! Application 함수 활용
+    public void GameExit() {
+        Application.Quit();//C#에서 지원하는 함수
+    }
+
+
 
     }
 
