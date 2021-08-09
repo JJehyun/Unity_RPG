@@ -58,7 +58,7 @@ public class QuestManager : MonoBehaviour
     }
 
 
-    void ControlObject(){
+    public void ControlObject(){
         switch (questId)
         {   //10번 퀘스트 일때, 두번째npc와 대화를 모두 마쳤을 때 게시판을 보이도록 설정
             case 10:
@@ -67,6 +67,8 @@ public class QuestManager : MonoBehaviour
             break;
             //20번 퀘스트 일 때, 게시판을 읽었을 때 게시판이 사라지도록 설정
             case 20:
+            if(questActionIndex == 0)
+                gameobject[0].SetActive(true);
                 if(questActionIndex == 1)
                 gameobject[0].SetActive(false);
             break;

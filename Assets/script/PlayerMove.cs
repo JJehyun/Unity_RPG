@@ -12,7 +12,24 @@ public class PlayerMove : MonoBehaviour
     Rigidbody2D rigid;
     Vector3 dirVec;  //현재 어디를 바라보고 있는지를 확인할 변수
     GameObject scanOject;
-    // Start is called before the first frame update
+    
+//모바일에서 사용하는 변수
+//버튼을 입력 받을 변수 12개 생성함
+    int up_Value;
+    int down_Value;
+    int left_Value;
+    int right_Value;
+
+    bool up_Down;
+    bool down_Down;
+    bool left_Down;
+    bool right_Down;
+
+    bool up_Up;
+    bool down_Up;
+    bool left_Up;
+    bool right_Up;        
+//버튼을 입력 받을 변수 12개 생성함  끝
     void Awake()
     {   
         Speed = 3; 
@@ -22,9 +39,10 @@ public class PlayerMove : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   //gameManager.isAction ? 0 : => npc 대화 중 Player 이동 금지 logic
-        h = gameManager.isAction ? 0 : Input.GetAxisRaw("Horizontal");  //수평이동
-        v = gameManager.isAction ? 0 : Input.GetAxisRaw("Vertical");    //수직이동
+    {   //gameManager.isAction ? 0 : => npc 대화 중 Player 이동 금지 logic  (pc상,moblie에서 캐릭터이동 관련)
+        h = gameManager.isAction ? 0 : Input.GetAxisRaw("Horizontal") + right_Value + left_Value;  //수평이동
+        v = gameManager.isAction ? 0 : Input.GetAxisRaw("Vertical") + up_Value + down_Value;    //수직이동
+
         //gameManager.isAction ? false : => npc 대화 중 Player 이동 금지 logic
         bool hDown =gameManager.isAction ? false : Input.GetButtonDown("Horizontal");
         bool vDown =gameManager.isAction ? false : Input.GetButtonDown("Vertical"); 
@@ -76,6 +94,47 @@ public class PlayerMove : MonoBehaviour
     else
         scanOject = null;
     }
+    public void ButtonDown(string type){
+        switch (type){
+            case "U":
+                up_Value = 1;
+                up_Down = true;
+                break;
+            case "D": 
+                down_Value = -1;
+                down_Down = true;
+                break;
+            case "L":
+                left_Value = -1;
+                left_Down = true;
+                break;
+            case "R":
+                right_Value = 1;
+                right_Down = true;
+                break;
+        }
+    }
 
+    public void ButtonUp(string type){
+        switch (type){
+            case "U":
+                up_Value = 0;
+                up_Up=true;
+                break;
+            case "D": 
+                down_Value = 0;
+                down_Up = true;
+                break;
+            case "L":
+                left_Value = 0;
+                left_Up = true;
+                break;
+            case "R":
+                right_Value = 0;
+                right_Up = true;
+                break;
+        }
+
+    }
 
 }

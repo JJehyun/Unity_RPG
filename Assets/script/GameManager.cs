@@ -16,10 +16,11 @@ public class GameManager : MonoBehaviour
     public bool isAction;
     public int talkIndex;
     public Text questText;
+    public GameObject player;
 
 
     public void Start()
-    {
+    {   GameRoad();
         questText.text = questManager.CheckQuest();
     }
 
@@ -102,6 +103,41 @@ public class GameManager : MonoBehaviour
         isAction = true;//대화상자게 계속 보이게 true
         talkIndex++;
     }
+    //게임 저장하기(퀘스트 정보, 캐릭터의 위치를 저장해야함) PlayerPrefs = 간단한 데이터 저장 기능 클래스
+    //player.x , player.y ,Quest Id, Quest Action Index
+    public void GameSave(){
+
+
+        //player 위치 저장
+        PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
+        PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
+        //진행중인 퀘스트 대표 타이틀
+        PlayerPrefs.SetInt("QustId", questManager.questId);
+        //진행중인 퀘스트 1-2 저장
+        PlayerPrefs.SetInt("QuestActionIndex", questManager.questActionIndex);
+        //사용자 레지스트리에 위 값이 저장됨 
+        PlayerPrefs.Save();
+
+        menuset.SetActive(false);
+    }
+    //저장한 게임 불러오기(레지스트리에 저장된 위치 정보,퀘스트 정보를 불러옴)
+    public void GameRoad(){        //사용자가 한번도 save를 하지 않았다면 (hasKey) road를 하지 않겠다.
+        if(!PlayerPrefs.HasKey("PlayerX"))
+            return;
+
+        
+        float x = PlayerPrefs.GetFloat("PlayerX");
+        float y = PlayerPrefs.GetFloat("PlayerY");
+        int questId = PlayerPrefs.GetInt("QustId");
+        int questActionIndex = PlayerPrefs.GetInt("QuestActionIndex");
+
+
+        player.transform.position = new Vector3(x,y,0);
+        questManager.questId = questId;
+        questManager.questActionIndex = questActionIndex;
+        questManager.ControlObject();
+    }
+
 
 
 
@@ -109,6 +145,7 @@ public class GameManager : MonoBehaviour
     public void GameExit() {
         Application.Quit();//C#에서 지원하는 함수
     }
+
 
 
 
