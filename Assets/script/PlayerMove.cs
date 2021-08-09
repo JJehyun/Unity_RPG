@@ -43,11 +43,11 @@ public class PlayerMove : MonoBehaviour
         h = gameManager.isAction ? 0 : Input.GetAxisRaw("Horizontal") + right_Value + left_Value;  //수평이동
         v = gameManager.isAction ? 0 : Input.GetAxisRaw("Vertical") + up_Value + down_Value;    //수직이동
 
-        //gameManager.isAction ? false : => npc 대화 중 Player 이동 금지 logic
-        bool hDown =gameManager.isAction ? false : Input.GetButtonDown("Horizontal");
-        bool vDown =gameManager.isAction ? false : Input.GetButtonDown("Vertical"); 
-        bool hUP =gameManager.isAction ? false : Input.GetButtonUp("Horizontal");
-        bool vUP =gameManager.isAction ? false : Input.GetButtonUp("Vertical");
+        //gameManager.isAction ? false : => npc 대화 중 Player 이동 금지 logic , 모바일 포함
+        bool hDown =gameManager.isAction ? false : Input.GetButtonDown("Horizontal") ||right_Down ||left_Down;
+        bool vDown =gameManager.isAction ? false : Input.GetButtonDown("Vertical") || up_Down || down_Down; 
+        bool hUP =gameManager.isAction ? false : Input.GetButtonUp("Horizontal") ||right_Up || left_Up;
+        bool vUP =gameManager.isAction ? false : Input.GetButtonUp("Vertical") || up_Up || down_Up;
 
         if(hDown || vUP)
             isHorizontal = true;
@@ -79,6 +79,17 @@ public class PlayerMove : MonoBehaviour
             //gameManager함수의 텍스트 상자여는 함수 실행
             gameManager.Action(scanOject);  
             }
+
+        //mobile Var INit
+        up_Down = false;
+        down_Down = false;
+        left_Down = false;
+        right_Down = false;
+
+        up_Up = false;
+        down_Up = false;
+        left_Up = false;
+        right_Up = false;
 
     }
     void FixedUpdate() {
@@ -112,6 +123,13 @@ public class PlayerMove : MonoBehaviour
                 right_Value = 1;
                 right_Down = true;
                 break;
+            case "A":
+                if (scanOject != null)
+                gameManager.Action(scanOject);
+                break;
+            case "C":
+                gameManager.SubMenuActive();
+                break;
         }
     }
 
@@ -133,6 +151,7 @@ public class PlayerMove : MonoBehaviour
                 right_Value = 0;
                 right_Up = true;
                 break;
+
         }
 
     }

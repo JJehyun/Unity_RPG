@@ -41,16 +41,18 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Cancel")) {
-            if (menuset.activeSelf)//esc눌렀을 때 메뉴창이 켜져있다면 비활성화하겠다.
-            {
-                menuset.SetActive(false);
-            }
-            else
-            menuset.SetActive(true);
-        }    
+        if (Input.GetButton("Cancel"))
+            SubMenuActive();
     }
 
+    public void SubMenuActive() {
+        if (menuset.activeSelf)//esc눌렀을 때 메뉴창이 켜져있다면 비활성화하겠다.
+        {
+            menuset.SetActive(false);
+        }
+        else
+            menuset.SetActive(true);
+    }
 
     //(각 Npc맞는 데이터를 가져옴)
     void Talk(int id, bool isNpc){
